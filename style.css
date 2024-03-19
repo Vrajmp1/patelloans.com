@@ -1,0 +1,204 @@
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+#hero-section {
+  background: rgb(180, 188, 217);
+  min-height: 20%;
+}
+
+h3 {
+  color: white;
+}
+.display-1 {
+  font-family: 'Playfair Display', serif;
+  padding: 50px 0px;
+}
+
+input, select{
+  margin-bottom: 10px;
+  width: 85%;
+}
+
+#content-section {
+  width: 100vw;
+  background-color: #ff5900;
+}
+
+label {
+  display: block;
+  left: 50%;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+button {
+  position: relative;
+  margin: 0 auto;
+  left: 30%;
+  transition-duration: .5s;
+}
+
+button:hover {
+  transform: scale(.9);
+}
+
+#result {
+  text-align: center;
+  font-weight: 400;
+  font-family: 'Playfair Display', serif;
+  font-size: 500%;
+  margin: auto auto;
+}
+
+#result-container label{
+  min-height: 60px;
+}
+
+/*-----------------------------*/
+
+/* DEBUG */
+/* * {
+    background-color: black !important;
+    color: black !important;
+    border: 2px solid red !important;
+} */
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing:border-box; 
+}
+
+body {
+  margin:0;
+}
+
+header {
+  background-color: #b1b0b5;
+  height: 100px;
+}
+
+#logo {
+  background: transparent;
+  height: 60px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+ 
+.navbar ul {
+  position: relative;
+  left: 80px;
+  background-color: #b1b0b5;
+  list-style: none;
+  margin: 0px;
+  padding: 20px 0 0 0;
+  text-align: left;
+}
+
+.navbar li {
+  display: inline-block;
+  background-color: #b1b0b5;
+  padding: 20px;
+  margin: 0 25px;
+}
+ 
+.navbar a {
+  background-color: #b1b0b5;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+section {
+  margin:0px;
+}
+
+#hero {
+  position: relative;
+  text-align: center;
+  height: 500px;
+  width: 100vw; 
+  background-image:
+    linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.2)),
+    url("https://img.freepik.com/premium-photo/big-american-house-generative-ai_170984-9624.jpg");
+  background-position: center, center;
+  background-size: cover, cover;
+  background-attachment: fixed;
+}
+
+#hero-content{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#hero-content h1{
+  font-family: 'Roboto Mono', monospace;
+  color: white;
+  letter-spacing: 2px;
+  font-size: 60px;
+}
+
+#hero-content h2{
+  font-size: 32px;
+  color: white;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.container{
+  position: relative;
+  left: 40px;
+}
+.about h2{
+  display: inline-block;
+  position: relative;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-left: 40px;
+  font-family: 'Anton', sans-serif;
+  font-size: 40px;
+  letter-spacing: 3px;
+}
+
+.about h3{
+  font-size: 25px;
+}
+
+.about div img{
+  float: left;
+  position: relative;
+  height: clamp(100px,150px,240px);
+  border: solid black 2px;
+  box-sizing:border-box;
+  margin-right: 30px;
+  margin-bottom: 20px;
+  transition-duration: 2s;
+}
+
+.about div img:hover{
+  transform: scale(1.15);
+}
+
+.about div p{
+  display: inline;
+  font-size: 20px;
+}
+
+.sign {
+  margin-top: 50px;
+  height: 50px;
+  color: white;
+  font-size: 15px;
+  background-color: #413d4c;
+}
+
+.sign p{
+  position: relative;
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+}
