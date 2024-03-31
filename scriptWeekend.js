@@ -111,7 +111,7 @@ function go(){
   let mon = Number(desired_date.slice(5,7));
   let day = Number(desired_date.slice(8,10));
 
-  let dtw = days_left(3,9,mon,day,2024,yr);
+  let dtw = days_left(3,2,mon,day,2024,yr);
   let dtw1 = dtw - 1;
   let dtw2 = dtw + 1;
 
