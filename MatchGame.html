@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Matching Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="styleMatchGame.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <h1 class="text-center">Spongebob Matching Game</h1>
+    </header>
+    <section id="game-container">
+
+			<!-- This is where we display the flip and match counters -->
+      <div id="ui-container" class="text-center">
+        <h3>Flips: <span id="flip-count">0</span></h3>
+        <h3>Matches: <span id="match-count">0 </span></h3>
+      </div>
+      <div id="ui-container" class="text-center">
+        <h3>Best Score: <span id="best"></span></h3>
+      </div>
+
+      <div id="ui-container" class="text-center modes">
+        <button type="button" class="btn btn-warning" onclick="easy()">Easy</button>
+        <button type="button" class="btn btn-warning" onclick="medium()">Medium</button>
+        <button type="button" class="btn btn-warning" onclick="hard()">Hard</button>
+      </div>
+
+			<!-- This is where our cards will be rendered -->
+      <div id="card-container">
+      </div>
+
+      <div class="do-not-show" id="ui-congrats">
+        <h3>Congratuations, You Won!!</h3>
+      </div>
+
+      
+      <button id="ui-reset" class="btn btn-warning text-center" onclick="setUpAgain()">Reset Game</button>
+     
+
+			<!-- This is where our cards will be rendered -->
+      <div id="card-container">
+      </div>
+      
+    </section>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+    <script src="https://small-potatoes.github.io/podium-webdev/tbhqtesting.js"></script>
+    <script src="provided.js"></script>
+    <script src="scriptMatchGame.js"></script>
+  </body>
+</html>
+
