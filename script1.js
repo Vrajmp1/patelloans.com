@@ -1,5 +1,4 @@
-var list_birthday = [[1, 24, 2000, 'M. Patadia'],
-                     [2, 9, 2005, 'Sajubhai Patel'],
+var list_birthday = [[2, 9, 2005, 'Sajubhai Patel'],
                      [2, 12, 2003, 'Vaju bhai Patel'],
                      [3, 19, 2000, 'Meeruben Patel'],
 					 [3, 25, 2011, 'Nipun Patel'],
