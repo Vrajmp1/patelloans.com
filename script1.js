@@ -136,20 +136,6 @@ function go(){
 
 
 
-viewport_width = document.documentElement.clientWidth;
-console.log(viewport_width);
-
-if (viewport_width < 550) {
-  let control_row = document.getElementById("controls");
-  control_row.style.marginLeft = "-20%";
-  control_row.style.marginTop = "-12%";
-  let img = document.getElementsByTagName('img')[0];
-  img.style.marginLeft = "10px";
-}
-else{
-  let next = document.getElementById("next-button");
-  next.style.transform = "translateX(25%)"
-}
 
 function sleepFor(sleepDuration){
     var now = new Date().getTime();
@@ -170,13 +156,6 @@ function change(particulars){
     document.getElementsByTagName("p")[0].innerHTML = num_to_month[month];
     let date = document.getElementsByTagName("p")[1];
     date.innerHTML = day;
-    if (String(day).length==1){
-      console.log('True');
-      date.style.marginLeft = "130%";
-    }
-    else {
-      date.style.marginLeft = "55%";
-    }
   
     document.getElementsByTagName("p")[2].innerHTML = particulars[3];
     let weekday = which_weekday(month,day,cur_yr);

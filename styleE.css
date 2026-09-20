@@ -1,88 +1,213 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   min-height: 100vh;
   width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-image: linear-gradient(#FBEE97, #ADEDD5);
+  padding-bottom: 24px;
 }
 
 .main {
-  width: 70vw;
-  height: 70vw;
+  width: min(88vw, 420px);
+  min-height: 470px;
   background: #b4d9d4;
-  margin-top: 12%;
+  margin: 48px auto 0;
+  padding: 18px 16px 14px;
   border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-body{
-  background-image: linear-gradient(#FBEE97,#ADEDD5);
+.main > .row {
+  margin-left: 0;
+  margin-right: 0;
 }
 
-img {
-  width: 78%;
-  margin-top: 45%;
+.month {
+  color: green;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+#month-value {
+  margin: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: clamp(2rem, 10.5vw, 3.25rem);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.card-content {
+  min-height: 190px;
+  margin-top: 8px;
+}
+
+.date {
+  color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px 0 0;
+}
+
+.date p,
+#date-value {
+  margin: 0 !important;
+  font-size: clamp(4.5rem, 21vw, 7rem) !important;
+  line-height: 0.95;
+}
+
+.image-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 8px;
+}
+
+.image-frame {
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.32);
+}
+
+#card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.type {
+  color: green;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px 0;
+}
+
+.type p {
+  margin: 0;
+  font-size: clamp(1.15rem, 5vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.day {
+  color: green;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day p {
+  margin: 0;
+  font-size: clamp(1rem, 4.2vw, 1.25rem);
+}
+
+#controls {
+  margin-top: auto;
+  padding: 8px 2px 0;
+  align-items: center;
+}
+
+.prev,
+.next {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.prev {
+  justify-content: flex-start;
+}
+
+.next {
+  justify-content: flex-end;
+}
+
+#controls button {
+  width: 50px;
+  height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: black;
+  font-size: 2.35rem;
+  line-height: 1;
+  border-radius: 50%;
+  touch-action: manipulation;
+}
+
+#controls button:focus-visible {
+  outline: 3px solid rgba(0, 128, 0, 0.35);
+  outline-offset: 2px;
 }
 
 audio {
   position: relative;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translateX(-50%);
   margin-top: 20%;
-}
-
-.date p{
-  margin-left: 60%;
-}
-
-.date {
-  color: green;
-  margin-top: 20%;
-}
-
-.type {
-  margin-top: 5%;
-  font-size: 5vw;
-  color: green;
-}
-
-.month {
-  height: 20px;
-  font-size: 375%;
-  color: green;
-}
-
-.day {
-  color: green;
-}
-
-.next, .prev {
-  font-size: 8vw;
-  margin-top: -15%;
-  color: black;
-}
-
-button{
-  background: none;
-  border: none;
+  max-width: 90vw;
 }
 
 .mode {
   position: relative;
   left: 50%;
+  width: min(100%, 520px);
   margin-top: 5%;
   transform: translateX(-50%);
 }
 
-.mode button{
-  font-size: 195%;
+.mode button {
+  font-size: clamp(1rem, 5vw, 1.5rem);
 }
 
 .title {
   color: green;
   position: relative;
   margin: 0 auto;
+  width: 100%;
 }
 
-.title h1{
-  font-size: 200%;
+.title h1 {
+  font-size: clamp(1.6rem, 7vw, 2rem);
   text-shadow: 1px 1px #0091ff;
+}
+
+@media (max-width: 360px) {
+  .main {
+    width: 92vw;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  #month-value {
+    font-size: clamp(1.85rem, 10vw, 2.4rem);
+  }
+
+  .image-frame {
+    max-width: 155px;
+  }
 }

@@ -19,24 +19,23 @@
   </div>
   
   <div class="container main">
-    <div class="row">
+    <div class="row month-row">
       <div class="col-12 month">
         <p class="text-center" id="month-value">June</p>
       </div>
     </div>
-    
-    <div class="row">
-      <div class="col-3 date">
-        <p style="font-size:22vw;" class="text-center display-1" id="date-value">14</p>
+
+    <div class="row card-content align-items-center">
+      <div class="col-4 date">
+        <p class="text-center display-1" id="date-value">14</p>
       </div>
-      <div class="col-2">
-        
-      </div>
-      <div class="col-7">
-        <img id="card-img" src="fruit_basket.jpg">
+      <div class="col-8 image-column">
+        <div class="image-frame">
+          <img id="card-img" src="fruit_basket.jpg" alt="Ekadashi illustration">
+        </div>
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col-12 type">
         <p class="text-center" id="type-value">મોક્ષદા એકાદશી</p>
@@ -50,22 +49,17 @@
     </div>
 
     <div class="row" id="controls">
-      <div class="col-2 prev">
-        <button onclick="previous()"
-          <i class="bi bi-arrow-left-circle"></i>
+      <div class="col-6 prev">
+        <button type="button" onclick="previous()" aria-label="Previous date">
+          <i class="bi bi-arrow-left-circle" aria-hidden="true"></i>
         </button>
       </div>
-      <div class="col-7">
-        
-      </div>
-      <div class="col-2 next" id="next-button">
-        <button onclick="forward()"
-          <i class="bi bi-arrow-right-circle"></i>
+      <div class="col-6 next" id="next-button">
+        <button type="button" onclick="forward()" aria-label="Next date">
+          <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
         </button>
       </div>
     </div>
-    
-    
   </div>
 
   <div class="container row mode">

@@ -1,32 +1,175 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   min-height: 100vh;
   width: 100%;
+  overflow-x: hidden;
 }
 
 hr {
-    border: 0;
-    height: 0; /* Firefox... */
-    box-shadow: 0 0 10px 1px black;
+  border: 0;
+  height: 0;
+  box-shadow: 0 0 10px 1px black;
+}
+
+body {
+  background-image: linear-gradient(#A2C5FE, #C2E9FC);
+  padding-bottom: 24px;
 }
 
 .main {
-  width: 70vw;
-  height: 70vw;
+  width: min(88vw, 420px);
+  min-height: 470px;
   background: #6abdf0;
-  margin-top: 12%;
+  margin: 48px auto 0 !important;
+  padding: 18px 16px 14px;
   border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
 }
 
-body{
-  background-image: linear-gradient(#A2C5FE,#C2E9FC);
+.main > .row {
+  margin-left: 0;
+  margin-right: 0;
 }
 
-img {
-  width: 78%;
-  margin-top: 45%;
-  max-height: 78%;
+.month {
+  color: #3f4b50;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+#month-value {
+  margin: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: clamp(2rem, 10.5vw, 3.25rem);
+  line-height: 1;
+  font-weight: 500;
+}
+
+.card-content {
+  min-height: 190px;
+  margin-top: 8px;
+}
+
+.date {
+  color: #3f4b50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px 0 0;
+}
+
+.date p,
+#date-value {
+  margin: 0 !important;
+  font-size: clamp(4.5rem, 21vw, 7rem) !important;
+  line-height: 0.95;
+}
+
+.image-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 8px;
+}
+
+.image-frame {
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+#card-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.type {
+  color: #3f4b50;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px 0;
+}
+
+.type p {
+  margin: 0;
+  font-size: clamp(1.15rem, 5vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.day {
+  color: #3f4b50;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day p {
+  margin: 0;
+  font-size: clamp(1rem, 4.2vw, 1.25rem);
+}
+
+#controls {
+  margin-top: auto;
+  padding: 8px 2px 0;
+  align-items: center;
+}
+
+.prev,
+.next {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.prev {
+  justify-content: flex-start;
+}
+
+.next {
+  justify-content: flex-end;
+}
+
+#controls button {
+  width: 50px;
+  height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #3f4b50;
+  font-size: 2.35rem;
+  line-height: 1;
+  border-radius: 50%;
+  touch-action: manipulation;
+}
+
+#controls button:focus-visible {
+  outline: 3px solid rgba(63, 75, 80, 0.35);
+  outline-offset: 2px;
 }
 
 audio {
@@ -34,97 +177,69 @@ audio {
   margin-top: 8%;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.date p{
-  margin-left: 60%;
-}
-
-.date {
-  color: #3f4b50;
-  margin-top: 20%;
-}
-
-.type {
-  margin-top: 5%;
-  font-size: 5vw;
-  color: #3f4b50;
-}
-
-.month {
-  height: 20px;
-  font-size: 375%;
-  color: #3f4b50;
-}
-
-.day {
-  color: #3f4b50;
-}
-
-.next, .prev {
-  font-size: 8vw;
-  margin-top: -10%;
-  color: #3f4b50;
-}
-
-button{
-  background: none;
-  border: none;
+  max-width: 90vw;
 }
 
 .mode {
   position: relative;
   left: 50%;
+  width: min(100%, 520px);
   margin-top: 5%;
-  transform: translateX(-48%);
+  transform: translateX(-50%);
 }
 
-.mode button{
-  font-size: 195%;
+.mode button {
+  font-size: clamp(1rem, 5vw, 1.5rem);
 }
 
 .title {
   color: #3f4b50;
   position: relative;
   margin: 0 auto;
+  width: 100%;
 }
 
-.title h1{
-  font-size: 200%;
+.title h1 {
+  font-size: clamp(1.6rem, 7vw, 2rem);
   text-shadow: 1px 1px #0091ff;
 }
 
-.cur-age{
+.cur-age {
   position: relative;
-  margin-top: 8%;
-  left: 55%;
-  transform: translateX(-50%);
+  width: 100%;
+  margin: 8% auto 0;
+  left: auto;
+  transform: none;
 }
-
- .then-age {
-  position: relative;
-  margin-top: 3%;
-  left: 55%;
-  transform: translateX(-52%);
- }
 
 .then-age {
-  margin-bottom: -5%;
+  position: relative;
+  width: 100%;
+  margin: 3% auto -5%;
+  left: auto;
+  transform: none;
 }
 
-#then-age-value-p, #age-value{
+#then-age-value-p,
+#age-value {
   font-size: 150%;
 }
 
 .go-to-index {
-  margin-top: 5%;
-  margin-left: 2%;
+  margin: 5% auto 0;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  left: auto;
+  transform: none;
+  width: 100%;
+  align-items: center;
 }
 
-#calculate, #submit {
+#go-to-date {
+  max-width: 100%;
+}
+
+#calculate,
+#submit {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -132,4 +247,41 @@ button{
   margin-bottom: 4%;
 }
 
+@media (max-width: 576px) {
+  .main {
+    width: 92vw;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 
+  #month-value {
+    font-size: clamp(1.85rem, 10vw, 2.4rem);
+  }
+
+  .image-frame {
+    max-width: 155px;
+  }
+
+  .go-to-index {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .go-to-index > .col-1 {
+    display: none;
+  }
+
+  .go-to-index > .col-3,
+  .go-to-index > .col-4,
+  .go-to-index > .col-2 {
+    width: auto;
+    padding: 0;
+  }
+
+  .go-to-index h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+}
