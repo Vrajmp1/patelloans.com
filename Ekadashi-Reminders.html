@@ -2,99 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ekadashis</title>
-
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-  <link href="styleE.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff0a8">
+  <title>Ekadashi Dates</title>
+  <link rel="stylesheet" href="styleE.css?v=4">
 </head>
 <body>
-  <div class="container row title">
-    <div class="col-12 text-center">
-      <h1 class="Display-1"><span id="cur-yr-title">2022</span> Ekadashi Dates</h1>
-    </div>
-  </div>
-  
-  <div class="container main">
-    <div class="row month-row">
-      <div class="col-12 month">
-        <p class="text-center" id="month-value">June</p>
-      </div>
-    </div>
+  <main class="app-shell">
+    <header class="page-header">
+      <h1><span id="cur-yr-title">2026</span> Ekadashi Dates</h1>
+    </header>
 
-    <div class="row card-content align-items-center">
-      <div class="col-4 date">
-        <p class="text-center display-1" id="date-value">14</p>
+    <nav class="mode-switch" aria-label="Calendar mode">
+      <span class="active" aria-current="page">Upvaas</span>
+      <a href="birthdays.html">Birthdays</a>
+    </nav>
+
+    <section class="event-card" id="ekadashi-card" aria-label="Selected Ekadashi or utsav">
+      <div class="month-row">
+        <h2 id="month-value" class="month-value">September</h2>
+        <span class="year-chip" id="event-year-chip">2026</span>
       </div>
-      <div class="col-8 image-column">
+
+      <div class="event-visual">
+        <div class="date-tile" aria-label="Event date">
+          <span id="date-value">22</span>
+          <small>Date</small>
+        </div>
         <div class="image-frame">
           <img id="card-img" src="fruit_basket.jpg" alt="Ekadashi illustration">
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-12 type">
-        <p class="text-center" id="type-value">મોક્ષદા એકાદશી</p>
+      <div class="event-copy">
+        <h3 id="type-value">જલઝીલણી એકાદશી</h3>
+        <p id="day-value">Tuesday</p>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-12 day">
-        <p class="text-center" id="day-value">Next Thursday</p>
-      </div>
-    </div>
-
-    <div class="row" id="controls">
-      <div class="col-6 prev">
-        <button type="button" onclick="previous()" aria-label="Previous date">
-          <i class="bi bi-arrow-left-circle" aria-hidden="true"></i>
+      <div class="card-controls" aria-label="Browse dates">
+        <button id="prev-button" type="button" onclick="previous()" aria-label="Previous date">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+        </button>
+        <span>Swipe or tap</span>
+        <button id="next-button" type="button" onclick="forward()" aria-label="Next date">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5.5 6.5 6.5-6.5 6.5"/></svg>
         </button>
       </div>
-      <div class="col-6 next" id="next-button">
-        <button type="button" onclick="forward()" aria-label="Next date">
-          <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="container row mode">
-    <div class="col-6 text-center">
-      <button autofocus="autofocus" type="button" class="btn btn-success disabled" aria-pressed="true">Upvaas</button>
-    </div>
-    <div class="col-6 text-center">
-      <a href="birthdays.html">
-        <button type="button" class="btn btn-success">Birthdays</button>
-      </a>
-    </div>
-  </div>
-  
-  <div>
-    <audio id="myAudio" controls>
-       <source src="Dada Sattu.mp3" />     
-    </audio>
-  </div>
+    <section class="countdown-card" aria-live="polite">
+      <span>Countdown</span>
+      <strong id="days-remaining">—</strong>
+    </section>
 
-  <div class="container">
-    <p class="text-center">Today's date is <span id="cur-day">20</span> <span id="cur-mon">July</span>, <span id="cur-yr">2022</span></p>
-  </div>
+    <section class="panel audio-panel">
+      <div class="panel-heading"><h2>Dada Sattu</h2></div>
+      <audio id="myAudio" controls preload="none"><source src="Dada Sattu.mp3"></audio>
+    </section>
 
-  <div class="container">
-    <p class="text-center display-3"><span id="days-remaining"></span></p>
-  </div>
+    <p class="today-line">Today is <strong><span id="cur-day">—</span> <span id="cur-mon">—</span>, <span id="cur-yr">—</span></strong></p>
+  </main>
 
-  
-  
-
-  
-  
-
-
-  
-  <script src="scriptE.js"></script>
+  <script src="scriptE.js?v=4"></script>
 </body>
 </html>

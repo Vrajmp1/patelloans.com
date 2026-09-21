@@ -1,4 +1,11 @@
-var list_birthday = [[2, 9, 2005, 'Sajubhai Patel'],
+// Birthday request email settings. Keep your EmailJS IDs here after setup.
+const EMAILJS_CONFIG = {
+  serviceId: "YOUR_EMAILJS_SERVICE_ID",
+  templateId: "YOUR_EMAILJS_TEMPLATE_ID",
+  publicKey: "YOUR_EMAILJS_PUBLIC_KEY"
+};
+
+const list_birthday = [[2, 9, 2005, 'Sajubhai Patel'],
                      [2, 12, 2003, 'Vaju bhai Patel'],
                      [3, 19, 2000, 'Meeruben Patel'],
 					 [3, 25, 2011, 'Nipun'],
@@ -36,414 +43,295 @@ var list_birthday = [[2, 9, 2005, 'Sajubhai Patel'],
                      [12, 13, 2008, 'Krusha'],
                      [12, 26, 1975, 'Manish Patel'],
 					 [12, 28, 2010, 'Prisha'],
-                     [12, 29, 1975, 'Rameshkaka Hirani']]
+                     [12, 29, 1975, 'Rameshkaka Hirani']];
 
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-var num_in_list = list_birthday.length - 1;
+let currentIndex = 0;
+let displayYear;
+const today = atNoon(new Date());
 
-var num_to_month = {1:'January',
-                    2:'February',
-                    3:'March',
-                    4:'April',
-                    5:'May',
-                    6:'June',
-                    7:'July',
-                    8:'August',
-                    9:'September',
-                    10:'October',
-                    11:'November',
-                    12:'December'
-                   }
-
-
-
-var days_in_months = {1:31,
-                  2:28,
-                  3:31,
-                  4:30,
-                  5:31,
-                  6:30,
-                  7:31,
-                  8:31,
-                  9:30,
-                  10:31,
-                  11:30,
-                  12:31}
-
-var weekdays = ['Sunday','Monday','Tuesday',
-            'Wednesday','Thursday','Friday','Saturday'];
-
-
-var current_index = 0;
-
-//change today's date--------------------------------------------------
-var today = new Date();
-
-var cur_day = today.getDate();
-var cur_mon = (today.getMonth()+1);
-var cur_yr = today.getFullYear();
-var cur_year = cur_yr; //cur_year will not change
-
-document.getElementById("cur-day").innerHTML = cur_day;
-document.getElementById("cur-yr").innerHTML = cur_yr;
-document.getElementById("cur-mon").innerHTML = num_to_month[cur_mon];
-
-var date = cur_day +'-'+cur_mon+'-'+cur_yr;
-
-console.log(date);
-
-//--------------------------------------------------------------------
-//Find current index -------------------------------------------------
-function is_before(m1,d1,m2,d2){
-	if (m1<m2)
-		return true;
-	else if (m1>m2)
-		return false;
-	else{
-		if (d1<d2)
-			return true;
-		else if (d1>d2)
-			return false;
-		else
-			return false;
-  }
+function atNoon(value) {
+  const d = new Date(value);
+  d.setHours(12, 0, 0, 0);
+  return d;
 }
-function recenter(mon,day){
-  for (let i=0;i<=num_in_list;i++){
-    if (is_before(list_birthday[i][0],list_birthday[i][1],mon,day)==false){
-      current_index = i;
+
+function makeDate(year, month, day) {
+  return new Date(year, month - 1, day, 12, 0, 0, 0);
+}
+
+function daysBetween(from, to) {
+  return Math.round((atNoon(to) - atNoon(from)) / DAY_MS);
+}
+
+function addYearsClamped(date, years) {
+  const targetYear = date.getFullYear() + years;
+  const month = date.getMonth();
+  const day = Math.min(date.getDate(), new Date(targetYear, month + 1, 0).getDate());
+  return new Date(targetYear, month, day, 12, 0, 0, 0);
+}
+
+function addMonthsClamped(date, months) {
+  const sourceMonth = date.getMonth();
+  const rawMonth = sourceMonth + months;
+  const targetYear = date.getFullYear() + Math.floor(rawMonth / 12);
+  const targetMonth = ((rawMonth % 12) + 12) % 12;
+  const day = Math.min(date.getDate(), new Date(targetYear, targetMonth + 1, 0).getDate());
+  return new Date(targetYear, targetMonth, day, 12, 0, 0, 0);
+}
+
+function calendarAge(birthDate, referenceDate) {
+  const birth = atNoon(birthDate);
+  const reference = atNoon(referenceDate);
+  if (reference < birth) return [0, 0, 0];
+
+  let years = reference.getFullYear() - birth.getFullYear();
+  let cursor = addYearsClamped(birth, years);
+  if (cursor > reference) {
+    years -= 1;
+    cursor = addYearsClamped(birth, years);
+  }
+
+  let months = 0;
+  while (months < 11) {
+    const next = addMonthsClamped(cursor, 1);
+    if (next <= reference) {
+      cursor = next;
+      months += 1;
+    } else {
       break;
     }
   }
+
+  return [years, months, daysBetween(cursor, reference)];
 }
 
-recenter(cur_mon,cur_day);
-
-change(list_birthday[current_index]);
-
-function go(){
-  let desired_date = document.getElementById("go-to-date").value;
-  console.log(typeof(desired_date));
-  console.log(desired_date);
-  cur_yr = Number(desired_date.slice(0,4));
-  let reset_mon = Number(desired_date.slice(5,7));
-  let reset_day = Number(desired_date.slice(8,10));
-  recenter(reset_mon,reset_day);
-  change(list_birthday[current_index]);
+function formatDayLabel(targetDate, difference) {
+  const weekday = targetDate.toLocaleDateString(undefined, { weekday: "long" });
+  if (difference === 0) return "Today";
+  if (difference === 1) return "Tomorrow";
+  if (difference > 1 && difference < 7) return `Next ${weekday}`;
+  return weekday;
 }
 
-//--------------------------------------------------------------------
+function setInitialBirthday() {
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+  displayYear = today.getFullYear();
 
-
-
-
-function sleepFor(sleepDuration){
-    var now = new Date().getTime();
-    while(new Date().getTime() < now + sleepDuration){ /* Do nothing */ }
-}
-
-function change_pic(name){
-  let img = document.getElementById("card-img");
-  img.src = "pics/"+name+".jpg";
-  return true;
-}
-//------------------------------------implements the change function--------------------
-function change(particulars){
-  if (change_pic(particulars[3])===true){
-    sleepFor(500);
-    let month = particulars[0];
-    let day = particulars[1];
-    document.getElementsByTagName("p")[0].innerHTML = num_to_month[month];
-    let date = document.getElementsByTagName("p")[1];
-    date.innerHTML = day;
-  
-    document.getElementsByTagName("p")[2].innerHTML = particulars[3];
-    let weekday = which_weekday(month,day,cur_yr);
-    document.getElementsByTagName("p")[3].innerHTML = weekday;
-    document.getElementById("year-title").innerHTML = cur_yr;
-
-    //--------------updates current age and will be how old fields-----------------//
-    document.getElementById("then-age-value").innerText = cur_yr - particulars[2];
-    let age = cur_age(month,day,particulars[2],cur_mon,cur_day,cur_year);
-    console.log(age);
-    let years_old = age[0];
-    let months_old = age[1];
-    let days_old = age[2];
-
-    console.log(years_old, months_old, years_old);
-
-    document.getElementById("yr-age").textContent = years_old;
-    document.getElementById("mon-age").textContent = months_old;
-    document.getElementById("day-age").innerText = days_old;
-    
-    
-
-
-
-    //----------------------------------------------------------------------------//
-  
-    let days_till_birthday = days_left(cur_mon,cur_day,month,day,cur_year,cur_yr);
-    let remaining_element = document.getElementById("days-remaining");
-  
-    if (days_till_birthday<7 && days_till_birthday>0){
-      document.getElementsByTagName("p")[3].innerHTML = 'Next ' + weekday;
-    }
-    else if (days_till_birthday<4 && days_till_birthday>0){
-      document.getElementsByTagName("p")[3].innerHTML = 'This coming ' + particulars[3];
-    }
-    else if (days_till_birthday==0){
-      alert(`${particulars[3]}'s birthday is Today. Jay Swaminarayan 🙏`);
-    }
-    
-    if (days_till_birthday==1){
-      remaining_element.innerHTML = "Birthday is tomorrow";
-      remaining_element.style.color == "red";
-      remaining_element.style.fontSize == "40px";
-    }
-    else if (days_till_birthday==0){
-      remaining_element.innerHTML = "Birthday is TODAY";
-      remaining_element.style.color == "green";
-      remaining_element.style.fontSize = "50px";
-    }
-    else if (days_till_birthday<0){
-      remaining_element.innerHTML = `Birthday passed ${days_till_birthday} days ago`;
-    }
-    else {
-      remaining_element.innerHTML = `${days_till_birthday} days left`;
-    }
-  }
-}
-//----------------------------------------------------------------------------------------
-
-//-------------------------------functions to move forward and previous-----------------//
-function forward(){
-  if (current_index<num_in_list){
-    current_index += 1;
-  }
-  else {
-    current_index=0;
-    cur_yr+=1;
-  }
-  change(list_birthday[current_index]);
-}
-
-function previous(){
-  if (current_index>0){
-    current_index -= 1;
-  }
-  else {
-    current_index=num_in_list;
-    cur_yr-=1;;
-  }
-  change(list_birthday[current_index]);
-}
-//-----------------------------------------------------------------------------------
-
-//-------------------Helper function to calculate days_left between two dates---------//
-function days_left(month1,day1,month2,day2,year,cur_yr){
-  if (year==cur_yr){
-    let days1 = 0;
-    let days2 = 0;
-    for (let i=1;i<=12; i++) {
-      if (i<month1) {
-        days1 = (days1 + days_in_months[i]);
-      }
-      else 
-        days1 = days1;
-    }
-    for (let j=1; j<=12; j++){
-      if (j < month2)
-        days2 = (days2 + days_in_months[j]);
-      else
-        days2;
-    }
-    if (year%4!=0)
-        return (days2+day2)-(days1+day1);
-    else if((month1<2) || (month1==2 && day1<29) && ((month2>2))) {
-        return (days2+day2)-(days1+day1)+1;
-    }
-    else
-        return (days2+day2)-(days1+day1);
-  }
-  else if (cur_yr<year){
-    let days = 0, yr_indicator = cur_yr;
-    days = days_left(month2,day2,12,31,cur_yr,cur_yr)+1;
-    yr_indicator += 1;
-    while(yr_indicator<year){
-      if (yr_indicator%4==0)
-        days+=366;
-      else
-        days+=365;
-      yr_indicator+=1;
-    }
-    days += days_left(1,1,month1,day1,year,year);
-    return -(days);
-  }
-  else {
-    let days = 0, yr_indicator = year;
-    days = days_left(month1,day1,12,31,year,year)+1;
-    yr_indicator += 1;
-    while(yr_indicator<cur_yr){
-      if (yr_indicator%4==0)
-        days+=366;
-      else
-        days+=365;
-      yr_indicator+=1;
-    }
-    days += days_left(1,1,month2,day2,cur_yr,cur_yr);
-    return days;
-  }    
-}
-//--------------------------------------------------------------------------------------//
-
-
-//--------------------------------------determine which weekday a date is on----------------------------//
-
-function which_weekday(m2,d2,y2){
-  let days = days_left(4,2,m2,d2,1950,y2);
-  day_index = days%7;
-  console.log('days log index:',day_index);
-  return weekdays[day_index];
-}
-
-
-//------------------------------------------------------------------------------------------------------//
-
-//--------------------------------------determine bhakta's current age----------------------------//
-
-function is_earlier_in_year(m1,d1,m2,d2){
-  if (m1<m2)
-      return true;
-  else if (m1>m2)
-      return false;
-  else {
-      if (d1<d2)
-          return true;
-      else if (d1>d2)
-          return false;
-      else
-          return 'Same Day';
+  const found = list_birthday.findIndex(([m, d]) => m > month || (m === month && d >= day));
+  if (found === -1) {
+    currentIndex = 0;
+    displayYear += 1;
+  } else {
+    currentIndex = found;
   }
 }
 
-//takes in the birthday month, day, and year
-function cur_age(m1,d1,y1,m2,d2,y2){
-  console.log('cur mo',m2,'cur day',d2,'cur yr',y2);
-  console.log('birth mo',m1,'birth day',d1,'birth yr',y1);
-  let yrs_old = 0, mon_old = 0, day_old = 0;
-  let is_earlier = is_earlier_in_year(m1,d1,m2,d2);
-  if (is_earlier=='Same Day'){
-    yrs_old = y2 - y1;
-    return [yrs_old,mon_old,day_old];
-  }
-  else if (is_earlier==true){
-    yrs_old = y2 - y1;
-    mon_old = m2 - m1;
-    if (d1<d2){
-      if (m1==1){
-        day_old = 31-(d1+(31-d2));
-      }
-      else {
-        day_old = d2-d1;
-      }
-    } 
-    else {
-      mon_old-=1;
-      day_old = 31-(d1-d2)-1;
-      if (day_old==31){
-        mon_old+=1;
-        day_old=0;
-      }
-    }
-    return [yrs_old,mon_old,day_old];
-  }
-  else {
-    yrs_old = y2 - y1 - 1;
-    mon_old = 12-(m1-m2);
-    if (d1<d2){
-      if (m1==1){
-        day_old = 31-(d1+(31-d2));
-      }
-      else {
-        day_old = 31-(d1+(days_in_months[m1-1]-d2));
-      }
-    } 
-    else {
-      mon_old-=1;
-      day_old = 31-(d1-d2);
-      if (day_old==31){
-        mon_old+=1;
-        day_old=0;
-      }
-    }
-  }
-  return [yrs_old,mon_old,day_old];
+function updateBirthdayCard() {
+  const [month, day, birthYear, name] = list_birthday[currentIndex];
+  const targetDate = makeDate(displayYear, month, day);
+  const birthDate = makeDate(birthYear, month, day);
+  const difference = daysBetween(today, targetDate);
+  const age = calendarAge(birthDate, today);
+
+  document.getElementById("month-value").textContent = MONTHS[month - 1];
+  document.getElementById("date-value").textContent = day;
+  document.getElementById("type-value").textContent = name;
+  document.getElementById("day-value").textContent = formatDayLabel(targetDate, difference);
+  document.getElementById("year-title").textContent = displayYear;
+  document.getElementById("birthday-year-chip").textContent = displayYear;
+  document.getElementById("then-age-value").textContent = displayYear - birthYear;
+  document.getElementById("yr-age").textContent = age[0];
+  document.getElementById("mon-age").textContent = age[1];
+  document.getElementById("day-age").textContent = age[2];
+
+  const image = document.getElementById("card-img");
+  image.src = `pics/${name}.jpg`;
+  image.alt = `${name} birthday portrait`;
+
+  const remaining = document.getElementById("days-remaining");
+  if (difference === 0) remaining.textContent = "Birthday is today 🎉";
+  else if (difference === 1) remaining.textContent = "Birthday is tomorrow";
+  else if (difference > 1) remaining.textContent = `${difference} days left`;
+  else if (difference === -1) remaining.textContent = "1 day ago";
+  else remaining.textContent = `${Math.abs(difference)} days ago`;
 }
 
-
-//------------------------------------------------------------------------------------------------------//
-
-
-for (let i=0;i<num_in_list+1;i++){
-  let new_elem1 = document.createElement("option");
-  new_elem1.setAttribute("value",i);
-  new_elem1.innerText = list_birthday[i][3];
-  document.querySelector("#names1").appendChild(new_elem1);
-
-  let new_elem2 = document.createElement("option");
-  new_elem2.setAttribute("value",i);
-  new_elem2.innerText = list_birthday[i][3];
-  document.querySelector("#names2").appendChild(new_elem2);
+function forward() {
+  if (currentIndex < list_birthday.length - 1) {
+    currentIndex += 1;
+  } else {
+    currentIndex = 0;
+    displayYear += 1;
+  }
+  updateBirthdayCard();
 }
 
-function is_older(m1,d1,y1,m2,d2,y2){
-    if (y1<y2)
-        return 1;
-    else if (y1>y2)
-        return 2;
-    else{
-        if (m1<m2)
-            return 1;
-        else if (m1>m2)
-            return 2;
-        else {
-            if (d1<d2)
-                return 1;
-            else if (d1>d2)
-                return 2;
-            else
-                return 3; //same day returns 3
-            }
-    }
-}          
-
-function calculate(){
-  let person1 = document.getElementById("names1").value;
-  let person2 = document.getElementById("names2").value;
-
-  let p1mon = Number(list_birthday[person1][0]);
-  let p1day = Number(list_birthday[person1][1]);
-  let p1yr = Number(list_birthday[person1][2]);
-
-  let p2mon = Number(list_birthday[person2][0]);
-  let p2day = Number(list_birthday[person2][1]);
-  let p2yr = Number(list_birthday[person2][2]);
-
-  who_older = is_older(p1mon,p1day,p1yr,p2mon,p2day,p2yr);
-  if (who_older==1){
-    let diff = cur_age(p1mon,p1day,p1yr,p2mon,p2day,p2yr);
-    let diff_str = `${diff[0]} years, ${diff[1]} months, ${diff[2]} days`
-    document.querySelector("#diff-age").innerText=diff_str;
-    document.querySelector("#older").innerText=`${list_birthday[person1][3]} is older by`;
+function previous() {
+  if (currentIndex > 0) {
+    currentIndex -= 1;
+  } else {
+    currentIndex = list_birthday.length - 1;
+    displayYear -= 1;
   }
-  else if (who_older==2){
-    let diff = cur_age(p2mon,p2day,p2yr,p1mon,p1day,p1yr);
-    let diff_str = `${diff[0]} years, ${diff[1]} months, ${diff[2]} days`
-    document.querySelector("#diff-age").innerText=diff_str;
-    document.querySelector("#older").innerText=`${list_birthday[person2][3]} is older by`;
-  }
-  else {
-    document.querySelector("#diff-age").innerText = "0 years, 0 months, 0 days"
-  }
-
+  updateBirthdayCard();
 }
+
+function go() {
+  const value = document.getElementById("go-to-date").value;
+  if (!value) return;
+
+  const [year, month, day] = value.split("-").map(Number);
+  displayYear = year;
+  const found = list_birthday.findIndex(([m, d]) => m > month || (m === month && d >= day));
+
+  if (found === -1) {
+    currentIndex = 0;
+    displayYear += 1;
+  } else {
+    currentIndex = found;
+  }
+  updateBirthdayCard();
+}
+
+function populatePeople() {
+  const first = document.getElementById("names1");
+  const second = document.getElementById("names2");
+  list_birthday.forEach((entry, index) => {
+    [first, second].forEach((select) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = entry[3];
+      select.appendChild(option);
+    });
+  });
+}
+
+function calculate() {
+  const p1 = document.getElementById("names1").value;
+  const p2 = document.getElementById("names2").value;
+  const older = document.getElementById("older");
+  const diffAge = document.getElementById("diff-age");
+
+  if (p1 === "" || p2 === "") {
+    older.textContent = "Choose both people first.";
+    diffAge.textContent = "";
+    return;
+  }
+
+  const a = list_birthday[Number(p1)];
+  const b = list_birthday[Number(p2)];
+  const dateA = makeDate(a[2], a[0], a[1]);
+  const dateB = makeDate(b[2], b[0], b[1]);
+
+  if (dateA.getTime() === dateB.getTime()) {
+    older.textContent = "They are the same age.";
+    diffAge.textContent = "0 years, 0 months, 0 days";
+    return;
+  }
+
+  const aIsOlder = dateA < dateB;
+  const olderEntry = aIsOlder ? a : b;
+  const olderDate = aIsOlder ? dateA : dateB;
+  const youngerDate = aIsOlder ? dateB : dateA;
+  const diff = calendarAge(olderDate, youngerDate);
+
+  older.textContent = `${olderEntry[3]} is older by`;
+  diffAge.textContent = `${diff[0]} years, ${diff[1]} months, ${diff[2]} days`;
+}
+
+function emailJsIsConfigured() {
+  return !Object.values(EMAILJS_CONFIG).some((value) => value.startsWith("YOUR_EMAILJS_"));
+}
+
+async function Submit(event) {
+  event?.preventDefault();
+  const form = document.getElementById("birthday-request-form");
+  const submitButton = document.getElementById("submit");
+  const status = document.getElementById("request-status");
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  if (!emailJsIsConfigured()) {
+    status.className = "request-status error";
+    status.textContent = "Email sending is not configured yet. Add your EmailJS IDs in script1.js.";
+    return;
+  }
+
+  if (typeof emailjs === "undefined") {
+    status.className = "request-status error";
+    status.textContent = "The email service did not load. Check your connection and try again.";
+    return;
+  }
+
+  submitButton.disabled = true;
+  const originalText = submitButton.textContent;
+  submitButton.textContent = "Sending…";
+  status.className = "request-status sending";
+  status.textContent = "Sending request…";
+
+  try {
+    await emailjs.send(
+      EMAILJS_CONFIG.serviceId,
+      EMAILJS_CONFIG.templateId,
+      {
+        request_name: document.getElementById("request-name").value.trim(),
+        request_birthday: document.getElementById("request-bday").value,
+        request_email: document.getElementById("request-email").value.trim(),
+        submitted_at: new Date().toLocaleString()
+      },
+      { publicKey: EMAILJS_CONFIG.publicKey }
+    );
+    status.className = "request-status success";
+    status.textContent = "Request sent successfully!";
+    form.reset();
+  } catch (error) {
+    console.error("Birthday request email failed:", error);
+    status.className = "request-status error";
+    status.textContent = "The request could not be sent. Please try again.";
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalText;
+  }
+}
+
+function enableSwipe() {
+  const card = document.getElementById("birthday-card");
+  let startX = null;
+  card.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+    startX = event.clientX;
+  });
+  card.addEventListener("pointerup", (event) => {
+    if (startX === null) return;
+    const delta = event.clientX - startX;
+    startX = null;
+    if (Math.abs(delta) < 45) return;
+    delta < 0 ? forward() : previous();
+  });
+}
+
+function init() {
+  document.getElementById("cur-day").textContent = today.getDate();
+  document.getElementById("cur-mon").textContent = MONTHS[today.getMonth()];
+  document.getElementById("cur-yr").textContent = today.getFullYear();
+  document.getElementById("go-to-date").value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  setInitialBirthday();
+  populatePeople();
+  updateBirthdayCard();
+  enableSwipe();
+
+  document.addEventListener("keydown", (event) => {
+    if (event.target.matches("input, select, textarea")) return;
+    if (event.key === "ArrowLeft") previous();
+    if (event.key === "ArrowRight") forward();
+  });
+}
+
+init();

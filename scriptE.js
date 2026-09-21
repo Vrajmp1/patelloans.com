@@ -1,4 +1,4 @@
-var list_ekadashi = [[12, 14, 2021, 'Tuesday', 'મોક્ષદા એકાદશી', 'e'], 
+const list_ekadashi = [[12, 14, 2021, 'Tuesday', 'મોક્ષદા એકાદશી', 'e'], 
                      [12, 30, 2021, 'Thursday', 'સફલા એકાદશી', 'e'], 
                      [1, 13, 2022, 'Thursday', 'પુત્રદા એકાદશી', 'e'], 
                      [1, 28, 2022, 'Friday', 'ષટતિલા એકાદશી', 'e'], 
@@ -132,206 +132,115 @@ var list_ekadashi = [[12, 14, 2021, 'Tuesday', 'મોક્ષદા એકા�
                      [9, 7, 2026, 'Monday', 'અજા એકાદશી', 'e'],
                      [9, 22, 2026, 'Tuesday', 'જલઝીલણી એકાદશી', 'e'],
                      [10, 6, 2026, 'Tuesday', 'ઇન્દિરા એકાદશી', 'e'],
-                     [10, 22, 2026, 'Thursday', 'પાશાંકુશા એકાદશી', 'e']]
+                     [10, 22, 2026, 'Thursday', 'પાશાંકુશા એકાદશી', 'e']];
 
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DAY_MS = 24 * 60 * 60 * 1000;
+const today = atNoon(new Date());
+let currentIndex = 0;
 
+function atNoon(value) {
+  const d = new Date(value);
+  d.setHours(12, 0, 0, 0);
+  return d;
+}
 
-var num_in_list = list_ekadashi.length - 1;
+function makeDate(year, month, day) {
+  return new Date(year, month - 1, day, 12, 0, 0, 0);
+}
 
-var num_to_month = {1:'January',
-                    2:'February',
-                    3:'March',
-                    4:'April',
-                    5:'May',
-                    6:'June',
-                    7:'July',
-                    8:'August',
-                    9:'September',
-                    10:'October',
-                    11:'November',
-                    12:'December'
-                   }
+function daysBetween(from, to) {
+  return Math.round((atNoon(to) - atNoon(from)) / DAY_MS);
+}
 
-var days_in_months = {1:31,
-                  2:28,
-                  3:31,
-                  4:30,
-                  5:31,
-                  6:30,
-                  7:31,
-                  8:31,
-                  9:30,
-                  10:31,
-                  11:30,
-                  12:31}
+function setInitialEvent() {
+  const found = list_ekadashi.findIndex(([month, day, year]) => makeDate(year, month, day) >= today);
+  currentIndex = found === -1 ? list_ekadashi.length - 1 : found;
+}
 
+function imageForType(type) {
+  if (type === "h") return "Harikrishnaji.jpg";
+  if (type === "j") return "krishna.jpg";
+  if (type === "s") return "shivratri.jpg";
+  return "fruit_basket.jpg";
+}
 
-var current_index = 0;
+function dayLabel(eventDate, listedWeekday, difference) {
+  if (difference === 0) return "Today";
+  if (difference === 1) return "Tomorrow";
+  if (difference > 1 && difference < 7) return `Next ${listedWeekday.replace(",", "")}`;
+  return listedWeekday.replace(",", "");
+}
 
-//change today's date--------------------------------------------------
-var today = new Date();
+function updateEventCard() {
+  const [month, day, year, weekday, name, type] = list_ekadashi[currentIndex];
+  const eventDate = makeDate(year, month, day);
+  const difference = daysBetween(today, eventDate);
 
-var cur_day = today.getDate();
-var cur_mon = (today.getMonth()+1);
-var cur_yr = today.getFullYear();
+  document.getElementById("month-value").textContent = MONTHS[month - 1];
+  document.getElementById("date-value").textContent = day;
+  document.getElementById("type-value").textContent = name;
+  document.getElementById("day-value").textContent = dayLabel(eventDate, weekday, difference);
+  document.getElementById("cur-yr-title").textContent = year;
+  document.getElementById("event-year-chip").textContent = year;
 
-document.getElementById("cur-day").innerHTML = cur_day;
-document.getElementById("cur-yr").innerHTML = cur_yr;
-document.getElementById("cur-mon").innerHTML = num_to_month[cur_mon];
+  const image = document.getElementById("card-img");
+  image.src = imageForType(type);
+  image.alt = `${name} illustration`;
 
-var date = cur_day +'-'+cur_mon+'-'+cur_yr;
+  const remaining = document.getElementById("days-remaining");
+  if (difference === 0) remaining.textContent = "Today 🙏";
+  else if (difference === 1) remaining.textContent = "Tomorrow";
+  else if (difference > 1) remaining.textContent = `${difference} days left`;
+  else if (difference === -1) remaining.textContent = "1 day ago";
+  else remaining.textContent = `${Math.abs(difference)} days ago`;
 
-console.log(date);
+  document.getElementById("prev-button").disabled = currentIndex === 0;
+  document.getElementById("next-button").disabled = currentIndex === list_ekadashi.length - 1;
+}
 
-//--------------------------------------------------------------------
-//Find current index -------------------------------------------------
-for (let i=0;i<=num_in_list;i++){
-  let days_remaining = days_left(cur_mon,cur_day,list_ekadashi[i][0],list_ekadashi[i][1],cur_yr,list_ekadashi[i][2]);
-  if (days_remaining>=0){
-    current_index = i;
-    break;
+function forward() {
+  if (currentIndex < list_ekadashi.length - 1) {
+    currentIndex += 1;
+    updateEventCard();
   }
 }
 
-
-
-//--------------------------------------------------------------------
-var prev = 'e';
-change(list_ekadashi[current_index]);
-
-
-
-  
-function change(particulars){
-  if (particulars[5]==='h') {
-    let img = document.getElementById("card-img");
-    img.src = "Harikrishnaji.jpg";
-    prev = "h";
+function previous() {
+  if (currentIndex > 0) {
+    currentIndex -= 1;
+    updateEventCard();
   }
-  else if (particulars[5]==='j'){
-    let img = document.getElementById("card-img");
-    img.src = "krishna.jpg";
-    prev = "j";
-  }
-  else if (particulars[5]==='s'){
-    let img = document.getElementById("card-img");
-    img.src = "shivratri.jpg";
-    prev = "s";
-  }
-  else if (prev === 'h' || prev === 'j' || prev === 's') {
-    let img = document.getElementById("card-img");
-    img.src = "fruit_basket.jpg"
-    prev = "e";
-  }
-  let month = particulars[0];
-  let day = particulars[1];
-  document.getElementsByTagName("p")[0].innerHTML = num_to_month[month];
-  let date = document.getElementsByTagName("p")[1];
-  date.innerHTML = day;
-  
-  document.getElementsByTagName("p")[2].innerHTML = particulars[4];
-  document.getElementsByTagName("p")[3].innerHTML = particulars[3];
-  document.getElementById("cur-yr-title").innerHTML = particulars[2]
-
-  let days_till_ekadashi = days_left(cur_mon,cur_day,month,day,cur_yr,particulars[2]);
-  let remaining_element = document.getElementById("days-remaining");
-
-  if (days_till_ekadashi<7 && days_till_ekadashi>0){
-    document.getElementsByTagName("p")[3].innerHTML = 'Next ' + particulars[3];
-  }
-  else if (days_till_ekadashi<4 && days_till_ekadashi>0){
-    document.getElementsByTagName("p")[3].innerHTML = 'This coming ' + particulars[3];
-  }
-  else if (days_till_ekadashi==0){
-    //alert("Ekadashi is today. Ekadashi na bhavthi Jay Swaminarayan.🙏");
-  }
-  
-  if (days_till_ekadashi==1){
-    remaining_element.innerHTML = "Ekadashi is tomorrow";
-    remaining_element.style.color == "red";
-    remaining_element.style.fontSize == "40px";
-  }
-  else if (days_till_ekadashi==0){
-    remaining_element.innerHTML = "Ekadashi is TODAY";
-    remaining_element.style.color == "green";
-    remaining_element.style.fontSize = "50px";
-  }
-  else if (days_till_ekadashi<0){
-    remaining_element.innerHTML = `Ekadashi passed ${days_till_ekadashi} days ago`;
-  }
-  else {
-    remaining_element.innerHTML = `${days_till_ekadashi} days left`
-  }
-
 }
 
-function forward(){
-  if (current_index<num_in_list){
-    current_index += 1;
-    change(list_ekadashi[current_index]);
-  }
-  else
-    console.log('Jay Swaminarayan Forward no more');
+function enableSwipe() {
+  const card = document.getElementById("ekadashi-card");
+  let startX = null;
+  card.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+    startX = event.clientX;
+  });
+  card.addEventListener("pointerup", (event) => {
+    if (startX === null) return;
+    const delta = event.clientX - startX;
+    startX = null;
+    if (Math.abs(delta) < 45) return;
+    delta < 0 ? forward() : previous();
+  });
 }
 
-function previous(){
-  if (current_index>0){
-    current_index -= 1;
-    change(list_ekadashi[current_index]);
-  }
-  else
-    console.log('Jay Swaminarayan Previous no more');
+function init() {
+  document.getElementById("cur-day").textContent = today.getDate();
+  document.getElementById("cur-mon").textContent = MONTHS[today.getMonth()];
+  document.getElementById("cur-yr").textContent = today.getFullYear();
+  setInitialEvent();
+  updateEventCard();
+  enableSwipe();
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") previous();
+    if (event.key === "ArrowRight") forward();
+  });
 }
 
-function days_left(month1,day1,month2,day2,year,ek_year){
-  if (year==ek_year){
-    let days1 = 0;
-    let days2 = 0;
-    for (let i=1;i<=12; i++) {
-      if (i<month1) {
-        days1 = (days1 + days_in_months[i]);
-      }
-      else 
-        days1 = days1;
-    }
-    for (let j=1; j<=12; j++){
-      if (j < month2)
-        days2 = (days2 + days_in_months[j]);
-      else
-        days2;
-    }
-    if (year%4!=0)
-        return (days2+day2)-(days1+day1);
-    else if((month1<2) || (month1==2 && day1<29) && ((month2>2))) {
-        return (days2+day2)-(days1+day1)+1;
-    }
-    else
-        return (days2+day2)-(days1+day1);
-  }
-  else if (ek_year<year){
-    let days = 0, yr_indicator = ek_year;
-    days = days_left(month2,day2,12,31,ek_year,ek_year)+1;
-    yr_indicator += 1;
-    while(yr_indicator<year){
-      days += days_left(1,1,12,31,yr_indicator,yr_indicator)+1;
-      yr_indicator+=1;
-    }
-    days += days_left(1,1,month1,day1,year,year);
-    return -(days);
-  }
-  else {
-    let days = 0, yr_indicator = year;
-    days = days_left(month1,day1,12,31,year,year)+1;
-    console.log(days);
-    yr_indicator += 1;
-    while(yr_indicator<ek_year){
-      days += days_left(1,1,12,31,yr_indicator,yr_indicator)+1;
-      console.log(days);
-      yr_indicator+=1;
-    }
-    days += days_left(1,1,month2,day2,ek_year,ek_year);
-    console.log(days);
-    return days;
-  }
-    
-}
+init();
