@@ -1,8 +1,8 @@
 // Birthday request email settings. Keep your EmailJS IDs here after setup.
 const EMAILJS_CONFIG = {
-  serviceId: "YOUR_EMAILJS_SERVICE_ID",
-  templateId: "YOUR_EMAILJS_TEMPLATE_ID",
-  publicKey: "YOUR_EMAILJS_PUBLIC_KEY"
+  serviceId: "service_ouscsxr",
+  templateId: "template_xyq42th",
+  publicKey: "y7uViD8N7TNRnR4ui"
 };
 
 const list_birthday = [[2, 9, 2005, 'Sajubhai Patel'],
